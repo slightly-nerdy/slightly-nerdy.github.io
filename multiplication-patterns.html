@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Multiplication patterns</title>
+    <style>
+    <meta charset="utf-8">
+    <title>Canvas</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #ccc;
+        }
+
+        .toolbar {
+            width: 350px;
+            height: 30px;
+            background: #ccc;
+        }
+
+        input[type="color"], button {
+            margin: 0;
+        }
+
+        input[type="number"] {
+            width: 50px;
+        }
+
+        span {
+            position: relative;
+            bottom: 5px;
+        }
+    </style>
+</head>
+
+
+<body>
+    <div class="toolbar">
+        Points <input type="number" onchange="drawIt()" id="num-points" min="1" max="9999" value="200">
+        Mult <input type="number" onchange="drawIt()" id="multiplication-value" min="1" max="9999" value="2">
+        Colour <input type="color" onchange="drawIt()" value="#ff8080">
+
+    </div>
+
+    <canvas class="myCanvas">
+        <p>Sorry,cannot render page. Canvas is not supported.</p>
+    </canvas>
+    <p id="demo"></p>
+    <script>
+    var canvas = document.querySelector('.myCanvas');
+	var width = canvas.width = window.innerWidth;
+	var height = canvas.height = window.innerHeight;
+
+	var center_h = width / 2;
+	var center_w = height / 2;
+	var margin = 0.1;
+	var radius = Math.min(width, height) / (2 + margin);
+
+	var colorPicker = document.querySelector('input[type="color"]');
+	var multValuePicker = document.getElementById("multiplication-value")
+	var numPointPicker = document.getElementById("num-points")
+	var clearBtn = document.querySelector('button');
+	var ctx = canvas.getContext('2d');
+
+	function circlePos(frac)
+	{
+	    var radians = frac * 2 * Math.PI;
+        // (0,0) is the top left corner
+	    return [
+            center_h + radius * Math.sin(radians),
+            center_w - radius * Math.cos(radians),
+	    ];
+	};
+
+	function drawArc(frac1, frac2)
+	{
+	    var h, w;
+	    ctx.beginPath();
+
+	    [h, w] = circlePos(frac1);
+	    ctx.moveTo(h, w);
+
+	    [h, w] = circlePos(frac2);
+	    ctx.lineTo(h, w);
+	    ctx.stroke();
+	};
+
+ 	ctx.beginPath();
+	ctx.arc(center_h, center_w, radius, 0, Math.PI*2);
+	ctx.stroke();
+
+	function drawIt() {
+	    ctx.fillStyle = 'white';
+	    ctx.fillRect(0, 0, width, height);
+
+	    ctx.strokeStyle = colorPicker.value;
+
+	    ctx.beginPath();
+	    ctx.arc(center_h, center_w, radius, 0, Math.PI * 2);
+	    ctx.stroke();
+
+	    const num_points = parseInt(numPointPicker.value);
+	    const mult_value = parseInt(multValuePicker.value);
+	    var i;
+	    for (i = 0; i < num_points; i++) {
+	        drawArc(i / num_points, i * mult_value / num_points);
+	    }
+	}
+
+	drawIt();
+
+    </script>
+</body>
+
+
+</html>
