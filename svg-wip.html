@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <style type="text/css" media="screen">
+
+        body {
+            margin: 0
+        }
+
+        svg {
+            display: block;
+            position: absolute;
+            top: 2%;
+            left: 2%;
+            width: 96%;
+            height: 96%;
+        }
+    </style>
+
+    <svg id="svg" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1000 1000">
+        <circle id="outer_cicle"
+                style="fill:none;stroke-width:1;stroke:rgb(0, 0, 0)" />
+        
+        Sorry, your browser does not support inline SVG.
+    </svg>
+
+    <script>
+        var width = 1000;
+        var height = 1000;
+        var center_h = width / 2;
+        var center_w = height / 2;
+	    var margin = 0.0;
+	    var radius = Math.min(width, height) / (2 + margin);
+
+        var svg = document.getElementById('svg');
+        var outer_cicle = document.getElementById('outer_cicle');
+        outer_cicle.setAttribute("r", height / 2);
+        outer_cicle.setAttribute("cx", width / 2);
+        outer_cicle.setAttribute("cy", height / 2);
+
+        function circlePos(frac) {
+            var radians = frac * 2 * Math.PI;
+            // (0,0) is the top left corner
+            return [
+                center_h + radius * Math.sin(radians),
+                center_w - radius * Math.cos(radians),
+            ];
+        };
+
+        function drawArc(frac1, frac2) {
+            var x1, y1;
+            [x1, y1] = circlePos(frac1);
+
+            var x2, y2;
+            [x2, y2] = circlePos(frac2);
+
+            var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttributeNS(null, 'x1', x1);
+            line.setAttributeNS(null, 'y1', y1);
+            line.setAttributeNS(null, 'x2', x2);
+            line.setAttributeNS(null, 'y2', y2);
+            line.setAttributeNS(null, 'style', "stroke:rgb(0,0,0);stroke-width:1");
+            svg.appendChild(line);
+        };
+
+	    const num_points = 400;
+	    const mult_value = 4;
+	    var i;
+	    for (i = 0; i < num_points; i++) {
+	        drawArc(i / num_points, i * mult_value / num_points);
+	    }
+
+    </script>
+
+</body>
+
+</html>
+
