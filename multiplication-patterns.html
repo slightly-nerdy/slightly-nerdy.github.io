@@ -17,6 +17,13 @@
             width: 350px;
             height: 30px;
             background: #ccc;
+            margin: 1px
+        }
+
+        .pattern {
+            position:relative; width:1000px; height:1000px;
+            margin: 0;
+            left:0; top:0; width:100%; height:100%;
         }
 
         input[type="color"], button {
@@ -43,10 +50,11 @@
 
     </div>
 
-
-    <svg id="svg" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1000 1000" style="stroke: red">
-        Sorry, your browser does not support inline SVG.
-    </svg>
+	<div class="pattern">
+		<svg id="svg" preserveAspectRatio="xMidYMid meet" position="relative" viewBox="0 0 1000 1000">
+			Sorry, your browser does not support inline SVG.
+		</svg>
+	</div>
 
 	<script>
         var svg = document.getElementById('svg');
@@ -55,8 +63,7 @@
 
 		var center_h = width / 2;
 		var center_w = height / 2;
-		var margin = 0.02;
-		var radius = Math.min(width, height) / (2 + margin);
+		var radius = Math.min(width, height) / 2;
 
 		var colorPicker = document.querySelector('input[type="color"]');
 		var multValuePicker = document.getElementById("multiplication-value")
