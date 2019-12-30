@@ -5,7 +5,7 @@
     <title>Multiplication patterns</title>
     <style>
     <meta charset="utf-8">
-    <title>Canvas</title>
+    <title>Svg</title>
     <style>
         body {
             margin: 0;
@@ -43,74 +43,81 @@
 
     </div>
 
-    <canvas class="myCanvas">
-        <p>Sorry,cannot render page. Canvas is not supported.</p>
-    </canvas>
-    <p id="demo"></p>
-    <script>
-    var canvas = document.querySelector('.myCanvas');
-	var width = canvas.width = window.innerWidth;
-	var height = canvas.height = window.innerHeight;
 
-	var center_h = width / 2;
-	var center_w = height / 2;
-	var margin = 0.1;
-	var radius = Math.min(width, height) / (2 + margin);
+    <svg id="svg" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1000 1000" style="stroke: red">
+        Sorry, your browser does not support inline SVG.
+    </svg>
 
-	var colorPicker = document.querySelector('input[type="color"]');
-	var multValuePicker = document.getElementById("multiplication-value")
-	var numPointPicker = document.getElementById("num-points")
-	var clearBtn = document.querySelector('button');
-	var ctx = canvas.getContext('2d');
+	<script>
+        var svg = document.getElementById('svg');
+		var width = svg.width = 1000;
+		var height = svg.height = 1000;
 
-	function circlePos(frac)
-	{
-	    var radians = frac * 2 * Math.PI;
-        // (0,0) is the top left corner
-	    return [
-            center_h + radius * Math.sin(radians),
-            center_w - radius * Math.cos(radians),
-	    ];
-	};
+		var center_h = width / 2;
+		var center_w = height / 2;
+		var margin = 0.02;
+		var radius = Math.min(width, height) / (2 + margin);
 
-	function drawArc(frac1, frac2)
-	{
-	    var h, w;
-	    ctx.beginPath();
+		var colorPicker = document.querySelector('input[type="color"]');
+		var multValuePicker = document.getElementById("multiplication-value")
+		var numPointPicker = document.getElementById("num-points")
+		var clearBtn = document.querySelector('button');
 
-	    [h, w] = circlePos(frac1);
-	    ctx.moveTo(h, w);
+		function circlePos(frac) {
+			var radians = frac * 2 * Math.PI;
+			// (0,0) is the top left corner
+			return [
+				center_h + radius * Math.sin(radians),
+				center_w - radius * Math.cos(radians),
+			];
+		};
 
-	    [h, w] = circlePos(frac2);
-	    ctx.lineTo(h, w);
-	    ctx.stroke();
-	};
+		function drawOuterCircle() {
+			var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+			circle.setAttribute("r", radius);
+            circle.setAttribute("cx", width / 2);
+            circle.setAttribute("cy", height / 2);
+			circle.setAttributeNS(null, 'style', "fill:none");
+			svg.appendChild(circle);
+		}
 
- 	ctx.beginPath();
-	ctx.arc(center_h, center_w, radius, 0, Math.PI*2);
-	ctx.stroke();
+		function drawArc(frac1, frac2) {
+			var x1, y1;
+			[x1, y1] = circlePos(frac1);
 
-	function drawIt() {
-	    ctx.fillStyle = 'white';
-	    ctx.fillRect(0, 0, width, height);
+			var x2, y2;
+			[x2, y2] = circlePos(frac2);
 
-	    ctx.strokeStyle = colorPicker.value;
+			var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+			line.setAttributeNS(null, 'x1', x1);
+			line.setAttributeNS(null, 'y1', y1);
+			line.setAttributeNS(null, 'x2', x2);
+			line.setAttributeNS(null, 'y2', y2);
+			svg.appendChild(line);
+		};
 
-	    ctx.beginPath();
-	    ctx.arc(center_h, center_w, radius, 0, Math.PI * 2);
-	    ctx.stroke();
+		function drawIt() {
+			// remove all elements
+			while (svg.lastChild) {
+   				svg.removeChild(svg.lastChild);
+			}
 
-	    const num_points = parseInt(numPointPicker.value);
-	    const mult_value = parseInt(multValuePicker.value);
-	    var i;
-	    for (i = 0; i < num_points; i++) {
-	        drawArc(i / num_points, i * mult_value / num_points);
-	    }
-	}
+			var style_options = 'stroke: ' + colorPicker.value + '; stroke-width:1'
+			svg.setAttributeNS(null, 'style', style_options);
 
-	drawIt();
+			drawOuterCircle();
 
-    </script>
+			const num_points = parseInt(numPointPicker.value);
+			const mult_value = parseInt(multValuePicker.value);
+			var i;
+			for (i = 0; i < num_points; i++) {
+				drawArc(i / num_points, i * mult_value / num_points);
+			}
+		}
+
+		drawIt();
+
+	</script>
 </body>
 
 
